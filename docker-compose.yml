@@ -1,0 +1,16 @@
+services:
+  postgres:
+    image: postgres:17-alpine
+    environment:
+      POSTGRES_USER: hsg
+      POSTGRES_PASSWORD: hsg
+      POSTGRES_DB: hsg_texture
+    ports: ["5432:5432"]
+    volumes: ["hsg_pg_data:/var/lib/postgresql/data"]
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U hsg -d hsg_texture"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+volumes:
+  hsg_pg_data:

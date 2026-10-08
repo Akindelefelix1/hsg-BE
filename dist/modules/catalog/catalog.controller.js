@@ -1,0 +1,122 @@
+var __decorate = (this && this.__decorate) || function (decorators, target, key, desc) {
+    var c = arguments.length, r = c < 3 ? target : desc === null ? desc = Object.getOwnPropertyDescriptor(target, key) : desc, d;
+    if (typeof Reflect === "object" && typeof Reflect.decorate === "function") r = Reflect.decorate(decorators, target, key, desc);
+    else for (var i = decorators.length - 1; i >= 0; i--) if (d = decorators[i]) r = (c < 3 ? d(r) : c > 3 ? d(target, key, r) : d(target, key)) || r;
+    return c > 3 && r && Object.defineProperty(target, key, r), r;
+};
+var __metadata = (this && this.__metadata) || function (k, v) {
+    if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
+};
+var __param = (this && this.__param) || function (paramIndex, decorator) {
+    return function (target, key) { decorator(target, key, paramIndex); }
+};
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
+import { JwtAuthGuard, Public, Role, Roles, RolesGuard } from '../../common/auth.js';
+import { CatalogService } from './catalog.service.js';
+import { CreateCategoryDto, CreateProductDto, UpdateCategoryDto, UpdateProductDto } from './catalog.dto.js';
+let CatalogController = class CatalogController {
+    catalog;
+    constructor(catalog) {
+        this.catalog = catalog;
+    }
+    products(search, category) { return this.catalog.listProducts(search, category); }
+    product(slug) { return this.catalog.getProduct(slug); }
+    categories() { return this.catalog.listCategories(); }
+};
+__decorate([
+    Public(),
+    Get('products'),
+    __param(0, Query('search')),
+    __param(1, Query('category')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, String]),
+    __metadata("design:returntype", void 0)
+], CatalogController.prototype, "products", null);
+__decorate([
+    Public(),
+    Get('products/:slug'),
+    __param(0, Param('slug')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], CatalogController.prototype, "product", null);
+__decorate([
+    Public(),
+    Get('categories'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], CatalogController.prototype, "categories", null);
+CatalogController = __decorate([
+    ApiTags('catalog'),
+    Controller('catalog'),
+    __metadata("design:paramtypes", [CatalogService])
+], CatalogController);
+export { CatalogController };
+let AdminCatalogController = class AdminCatalogController {
+    catalog;
+    constructor(catalog) {
+        this.catalog = catalog;
+    }
+    createProduct(dto) { return this.catalog.createProduct(dto); }
+    updateProduct(id, dto) { return this.catalog.updateProduct(id, dto); }
+    deleteProduct(id) { return this.catalog.deleteProduct(id); }
+    createCategory(dto) { return this.catalog.createCategory(dto); }
+    updateCategory(id, dto) { return this.catalog.updateCategory(id, dto); }
+    deleteCategory(id) { return this.catalog.deleteCategory(id); }
+};
+__decorate([
+    Post('products'),
+    __param(0, Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [CreateProductDto]),
+    __metadata("design:returntype", void 0)
+], AdminCatalogController.prototype, "createProduct", null);
+__decorate([
+    Patch('products/:id'),
+    __param(0, Param('id')),
+    __param(1, Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, UpdateProductDto]),
+    __metadata("design:returntype", void 0)
+], AdminCatalogController.prototype, "updateProduct", null);
+__decorate([
+    Delete('products/:id'),
+    __param(0, Param('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AdminCatalogController.prototype, "deleteProduct", null);
+__decorate([
+    Post('categories'),
+    __param(0, Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [CreateCategoryDto]),
+    __metadata("design:returntype", void 0)
+], AdminCatalogController.prototype, "createCategory", null);
+__decorate([
+    Patch('categories/:id'),
+    __param(0, Param('id')),
+    __param(1, Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String, UpdateCategoryDto]),
+    __metadata("design:returntype", void 0)
+], AdminCatalogController.prototype, "updateCategory", null);
+__decorate([
+    Delete('categories/:id'),
+    __param(0, Param('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [String]),
+    __metadata("design:returntype", void 0)
+], AdminCatalogController.prototype, "deleteCategory", null);
+AdminCatalogController = __decorate([
+    ApiTags('admin catalog'),
+    ApiBearerAuth(),
+    Roles(Role.ADMIN),
+    UseGuards(JwtAuthGuard, RolesGuard),
+    Controller('admin/catalog'),
+    __metadata("design:paramtypes", [CatalogService])
+], AdminCatalogController);
+export { AdminCatalogController };
+//# sourceMappingURL=catalog.controller.js.map

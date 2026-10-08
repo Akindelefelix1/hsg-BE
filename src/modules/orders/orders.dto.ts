@@ -1,0 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger'; import { Type } from 'class-transformer'; import { IsArray, IsEmail, IsEnum, IsNumber, IsOptional, IsPhoneNumber, IsString, IsUUID, Min, ValidateNested } from 'class-validator'; import { OrderStatus } from './order.entities.js';
+class OrderLineDto{@ApiProperty() @IsUUID() productId!:string; @ApiProperty() @IsNumber() @Min(.5) quantity!:number}
+export class CreateOrderDto{@ApiProperty() @IsString() customerName!:string; @ApiProperty() @IsPhoneNumber() phone!:string; @IsOptional() @IsEmail() email?:string; @ApiProperty() @IsString() deliveryAddress!:string; @ApiProperty({type:[OrderLineDto]}) @IsArray() @ValidateNested({each:true}) @Type(()=>OrderLineDto) items!:OrderLineDto[]}
+export class UpdateOrderStatusDto{@ApiProperty({enum:OrderStatus}) @IsEnum(OrderStatus) status!:OrderStatus}
