@@ -25,15 +25,18 @@ Production-oriented NestJS backend for the HSG Texture storefront.
 5. Set `CORS_ORIGINS` to the exact storefront origin(s), then run `npm run storage:configure-cors` to allow browser uploads to the bucket.
 6. Run `npm run db:migrate`, `npm run start:dev`, then open `http://localhost:4000/docs`.
 
-The `.env.example` file shows each required variable. Keep `.env` private and never commit it. Managed Better Auth owns sign-up, sign-in, and session management; set the same Auth Base URL as `VITE_NEON_AUTH_URL` in the storefront. The storefront should use `@neondatabase/neon-js` and send its short-lived access token to this API as `Authorization: Bearer <token>`. Access tokens expire after 15 minutes; call `auth.token()` again to obtain a fresh token. This API verifies the signature against the branch Auth JWKS endpoint and does not issue local JWTs.
+The `.env.example` file shows each required variable. Keep `.env` private and never commit it. Managed Better Auth owns sign-up, sign-in, and session management; set the same Auth Base URL as `NEXT_PUBLIC_NEON_AUTH_URL` in the storefront build. The storefront uses `https://hsg-be.onrender.com` by default as the API origin; set `NEXT_PUBLIC_HSG_API_URL` only to override it for another environment. Add the storefront origin to Neon Auth's trusted-domain list and to `CORS_ORIGINS`. The storefront uses `@neondatabase/neon-js` and sends its short-lived access token to this API as `Authorization: Bearer <token>`. Access tokens expire after 15 minutes; call `auth.token()` again to obtain a fresh token. This API verifies the signature against the branch Auth JWKS endpoint and does not issue local JWTs.
 
 For a separate frontend, initialize its auth client with the Base URL from Neon Console and pass the token to protected API calls:
 
 ```ts
 import { createAuthClient } from '@neondatabase/neon-js/auth';
+import { BetterAuthVanillaAdapter } from '@neondatabase/neon-js/auth/vanilla/adapters';
 
-const auth = createAuthClient(import.meta.env.VITE_NEON_AUTH_URL, {
-  fetchOptions: { credentials: 'include' },
+const auth = createAuthClient(process.env.NEXT_PUBLIC_NEON_AUTH_URL!, {
+  adapter: BetterAuthVanillaAdapter({
+    fetchOptions: { credentials: 'include' },
+  }),
 });
 
 const { data, error } = await auth.token();
