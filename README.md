@@ -7,7 +7,7 @@ Production-oriented NestJS backend for the HSG Texture storefront.
 - Versioned REST API (`/api/v1`)
 - Swagger/OpenAPI at `/docs`
 - PostgreSQL with TypeORM
-- JWT access and rotating refresh tokens
+- Neon Managed Better Auth with API-side JWT verification
 - Admin/customer roles
 - Products, categories and order management
 - DTO validation, CORS, Helmet and rate limiting
@@ -15,12 +15,37 @@ Production-oriented NestJS backend for the HSG Texture storefront.
 
 ## Start locally
 
-1. Copy `.env.example` to `.env` and replace both JWT secrets.
-2. For local PostgreSQL, run `npm run docker:db`. For Neon, run `neon link`, `neon deploy`, then `neon env pull --file .env`.
-3. Run `npm run db:migrate` and `npm run start:dev`.
-4. Open `http://localhost:4000/docs`.
+1. Copy `.env.example` to `.env`.
+2. In Neon Console, choose the production branch and open **Connect**:
+   - **Postgres database**: put the pooled connection string in `DATABASE_URL`, the direct connection string in `DIRECT_URL`, and keep `DB_SSL=true`.
+   - **Storage**: copy the endpoint, region, access key ID, and secret access key to the matching `AWS_*` variables. The access key ID is Neon’s `token_id`; the secret is `s3_secret_access_key`. Use a credential with `storage:read` and `storage:write` scopes.
+   - **Auth**: enable Managed Better Auth and copy its Base URL and JWKS URL into `NEON_AUTH_BASE_URL` and `NEON_AUTH_JWKS_URL`. Add each storefront origin to the Auth trusted-domain list.
+3. `neon.ts` declares Neon Auth and the existing `hsg-storage` bucket as `public_read`. Sign in to the Neon CLI, run `neon link`, confirm that it targets the intended project and production branch, then run `neon deploy`.
+4. Copy the current branch’s Neon environment values into `.env`. To export only Auth and Storage values without overwriting existing settings, run `neon env pull --project-id <project-id> --branch production --service auth --service object-storage --file .env.neon` and merge the values from that file. Ensure the Storage endpoint and region match the selected branch. Neon Object Storage is available in supported AWS regions; this project’s database is in `us-east-2`.
+5. Set `CORS_ORIGINS` to the exact storefront origin(s), then run `npm run storage:configure-cors` to allow browser uploads to the bucket.
+6. Run `npm run db:migrate`, `npm run start:dev`, then open `http://localhost:4000/docs`.
 
-In development, TypeORM synchronizes the schema. Set `NODE_ENV=production` only after adding and running explicit migrations.
+The `.env.example` file shows each required variable. Keep `.env` private and never commit it. Managed Better Auth owns sign-up, sign-in, and session management; set the same Auth Base URL as `VITE_NEON_AUTH_URL` in the storefront. The storefront should use `@neondatabase/neon-js` and send its short-lived access token to this API as `Authorization: Bearer <token>`. Access tokens expire after 15 minutes; call `auth.token()` again to obtain a fresh token. This API verifies the signature against the branch Auth JWKS endpoint and does not issue local JWTs.
+
+For a separate frontend, initialize its auth client with the Base URL from Neon Console and pass the token to protected API calls:
+
+```ts
+import { createAuthClient } from '@neondatabase/neon-js/auth';
+
+const auth = createAuthClient(import.meta.env.VITE_NEON_AUTH_URL, {
+  fetchOptions: { credentials: 'include' },
+});
+
+const { data, error } = await auth.token();
+if (error) throw error;
+const response = await fetch(`${API_URL}/api/v1/auth/me`, {
+  headers: { Authorization: `Bearer ${data.token}` },
+});
+```
+
+After creating the first user, grant administrator access from **Neon Console → Auth → Users → Make admin**. The API checks that role against `neon_auth.user`; it does not trust a role claim supplied by the client. Existing accounts in the old `public.users` table are not automatically migrated into Neon Auth.
+
+TypeORM schema synchronization is disabled. Apply database changes with the explicit migrations and use `DIRECT_URL` for the migration connection.
 
 ## Layout
 
@@ -28,8 +53,8 @@ In development, TypeORM synchronizes the schema. Set `NODE_ENV=production` only 
 src/
   common/             guards, roles and shared concerns
   modules/
-    auth/             registration, login, refresh and logout
-    users/            user persistence
+    auth/             Managed Better Auth JWT validation
+    users/            legacy user entity used by order relations
     catalog/          products and categories
     orders/           checkout and order administration
   app.module.ts
