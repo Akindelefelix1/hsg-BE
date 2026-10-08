@@ -19,10 +19,22 @@ let UsersService = class UsersService {
     constructor(users) {
         this.users = users;
     }
-    findByEmail(email, secrets = false) { return this.users.createQueryBuilder('user').where('LOWER(user.email) = LOWER(:email)', { email }).addSelect(secrets ? ['user.passwordHash', 'user.refreshTokenHash'] : []).getOne(); }
-    findById(id) { return this.users.findOneBy({ id, active: true }); }
-    create(data) { return this.users.save(this.users.create(data)); }
-    async setRefreshToken(id, refreshTokenHash) { await this.users.update(id, { refreshTokenHash: refreshTokenHash ?? undefined }); }
+    findByEmail(email, secrets = false) {
+        return this.users
+            .createQueryBuilder('user')
+            .where('LOWER(user.email) = LOWER(:email)', { email })
+            .addSelect(secrets ? ['user.passwordHash', 'user.refreshTokenHash'] : [])
+            .getOne();
+    }
+    findById(id) {
+        return this.users.findOneBy({ id, active: true });
+    }
+    create(data) {
+        return this.users.save(this.users.create(data));
+    }
+    async setRefreshToken(id, refreshTokenHash) {
+        await this.users.update(id, { refreshTokenHash });
+    }
 };
 UsersService = __decorate([
     Injectable(),

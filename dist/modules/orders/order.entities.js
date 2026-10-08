@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, CreateDateColumn, Entity, ManyToOne, OneToMany, PrimaryGeneratedColumn, } from 'typeorm';
 import { Product } from '../catalog/catalog.entities.js';
 import { User } from '../users/user.entity.js';
 export var OrderStatus;
@@ -62,7 +62,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Order.prototype, "total", void 0);
 __decorate([
-    OneToMany(() => OrderItem, item => item.order, { cascade: true, eager: true }),
+    OneToMany(() => OrderItem, (item) => item.order, {
+        cascade: true,
+        eager: true,
+    }),
     __metadata("design:type", Array)
 ], Order.prototype, "items", void 0);
 __decorate([
@@ -85,7 +88,7 @@ __decorate([
     __metadata("design:type", String)
 ], OrderItem.prototype, "id", void 0);
 __decorate([
-    ManyToOne(() => Order, order => order.items, { onDelete: 'CASCADE' }),
+    ManyToOne(() => Order, (order) => order.items, { onDelete: 'CASCADE' }),
     __metadata("design:type", Order)
 ], OrderItem.prototype, "order", void 0);
 __decorate([

@@ -16,8 +16,8 @@ Production-oriented NestJS backend for the HSG Texture storefront.
 ## Start locally
 
 1. Copy `.env.example` to `.env` and replace both JWT secrets.
-2. Run `npm run docker:db`.
-3. Run `npm run start:dev`.
+2. For local PostgreSQL, run `npm run docker:db`. For Neon, run `neon link`, `neon deploy`, then `neon env pull --file .env`.
+3. Run `npm run db:migrate` and `npm run start:dev`.
 4. Open `http://localhost:4000/docs`.
 
 In development, TypeORM synchronizes the schema. Set `NODE_ENV=production` only after adding and running explicit migrations.

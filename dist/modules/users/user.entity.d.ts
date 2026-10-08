@@ -5,7 +5,7 @@ export declare class User {
     passwordHash: string;
     name: string;
     role: Role;
-    refreshTokenHash?: string;
+    refreshTokenHash: string | null;
     active: boolean;
     createdAt: Date;
     updatedAt: Date;

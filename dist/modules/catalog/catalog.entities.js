@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
+import { Column, CreateDateColumn, DeleteDateColumn, Entity, Index, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn, } from 'typeorm';
 let Category = class Category {
     id;
     name;
@@ -85,7 +85,12 @@ __decorate([
     __metadata("design:type", String)
 ], Product.prototype, "name", void 0);
 __decorate([
-    Column({ type: 'decimal', precision: 12, scale: 2, transformer: { to: (v) => v, from: (v) => Number(v) } }),
+    Column({
+        type: 'decimal',
+        precision: 12,
+        scale: 2,
+        transformer: { to: (v) => v, from: (v) => Number(v) },
+    }),
     __metadata("design:type", Number)
 ], Product.prototype, "price", void 0);
 __decorate([

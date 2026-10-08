@@ -11,7 +11,11 @@ import { UsersService } from './users.service.js';
 let UsersModule = class UsersModule {
 };
 UsersModule = __decorate([
-    Module({ imports: [TypeOrmModule.forFeature([User])], providers: [UsersService], exports: [UsersService] })
+    Module({
+        imports: [TypeOrmModule.forFeature([User])],
+        providers: [UsersService],
+        exports: [UsersService],
+    })
 ], UsersModule);
 export { UsersModule };
 //# sourceMappingURL=users.module.js.map

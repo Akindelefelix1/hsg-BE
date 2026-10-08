@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Body, Controller, HttpCode, Post, Req, UseGuards } from '@nestjs/common';
+import { Body, Controller, HttpCode, Post, Req, UseGuards, } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard, Public } from '../../common/auth.js';
 import { AuthService } from './auth.service.js';
@@ -20,10 +20,18 @@ let AuthController = class AuthController {
     constructor(auth) {
         this.auth = auth;
     }
-    register(dto) { return this.auth.register(dto); }
-    login(dto) { return this.auth.login(dto); }
-    refresh(dto) { return this.auth.refresh(dto.refreshToken); }
-    logout(req) { return this.auth.logout(req.user.id); }
+    register(dto) {
+        return this.auth.register(dto);
+    }
+    login(dto) {
+        return this.auth.login(dto);
+    }
+    refresh(dto) {
+        return this.auth.refresh(dto.refreshToken);
+    }
+    logout(req) {
+        return this.auth.logout(req.user.id);
+    }
 };
 __decorate([
     Public(),

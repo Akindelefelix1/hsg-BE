@@ -13,7 +13,11 @@ import { OrdersService } from './orders.service.js';
 let OrdersModule = class OrdersModule {
 };
 OrdersModule = __decorate([
-    Module({ imports: [TypeOrmModule.forFeature([Order, OrderItem, Product])], controllers: [OrdersController], providers: [OrdersService] })
+    Module({
+        imports: [TypeOrmModule.forFeature([Order, OrderItem, Product])],
+        controllers: [OrdersController],
+        providers: [OrdersService],
+    })
 ], OrdersModule);
 export { OrdersModule };
 //# sourceMappingURL=orders.module.js.map

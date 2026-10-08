@@ -14,7 +14,11 @@ import { JwtStrategy } from './jwt.strategy.js';
 let AuthModule = class AuthModule {
 };
 AuthModule = __decorate([
-    Module({ imports: [UsersModule, PassportModule, JwtModule.register({})], controllers: [AuthController], providers: [AuthService, JwtStrategy] })
+    Module({
+        imports: [UsersModule, PassportModule, JwtModule.register({})],
+        controllers: [AuthController],
+        providers: [AuthService, JwtStrategy],
+    })
 ], AuthModule);
 export { AuthModule };
 //# sourceMappingURL=auth.module.js.map

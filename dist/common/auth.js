@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Injectable, SetMetadata } from '@nestjs/common';
+import { Injectable, SetMetadata, } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 export var Role;
@@ -24,7 +24,10 @@ let JwtAuthGuard = class JwtAuthGuard extends AuthGuard('jwt') {
         this.reflector = reflector;
     }
     canActivate(context) {
-        return this.reflector.getAllAndOverride('public', [context.getHandler(), context.getClass()]) || super.canActivate(context);
+        return (this.reflector.getAllAndOverride('public', [
+            context.getHandler(),
+            context.getClass(),
+        ]) || super.canActivate(context));
     }
 };
 JwtAuthGuard = __decorate([
@@ -38,7 +41,10 @@ let RolesGuard = class RolesGuard {
         this.reflector = reflector;
     }
     canActivate(context) {
-        const roles = this.reflector.getAllAndOverride('roles', [context.getHandler(), context.getClass()]);
+        const roles = this.reflector.getAllAndOverride('roles', [
+            context.getHandler(),
+            context.getClass(),
+        ]);
         if (!roles?.length)
             return true;
         return roles.includes(context.switchToHttp().getRequest().user.role);

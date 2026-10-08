@@ -22,16 +22,38 @@ let OrdersService = class OrdersService {
         this.orders = orders;
         this.products = products;
     }
-    async create(dto) { const products = await this.products.findBy({ id: In(dto.items.map(i => i.productId)), active: true }); if (products.length !== new Set(dto.items.map(i => i.productId)).size)
-        throw new BadRequestException('One or more products are unavailable'); const items = dto.items.map(line => { const product = products.find(p => p.id === line.productId); return Object.assign(new OrderItem(), { product, quantity: line.quantity, unitPrice: product.price }); }); const total = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0); return this.orders.save(this.orders.create(Object.assign({}, dto, { items, total }))); }
-    list() { return this.orders.find({ order: { createdAt: 'DESC' } }); }
-    async status(id, status) { await this.orders.update(id, { status }); return this.orders.findOneByOrFail({ id }); }
+    async create(dto) {
+        const products = await this.products.findBy({
+            id: In(dto.items.map((i) => i.productId)),
+            active: true,
+        });
+        if (products.length !== new Set(dto.items.map((i) => i.productId)).size)
+            throw new BadRequestException('One or more products are unavailable');
+        const items = dto.items.map((line) => {
+            const product = products.find((p) => p.id === line.productId);
+            return Object.assign(new OrderItem(), {
+                product,
+                quantity: line.quantity,
+                unitPrice: product.price,
+            });
+        });
+        const total = items.reduce((sum, item) => sum + item.unitPrice * item.quantity, 0);
+        return this.orders.save(this.orders.create(Object.assign({}, dto, { items, total })));
+    }
+    list() {
+        return this.orders.find({ order: { createdAt: 'DESC' } });
+    }
+    async status(id, status) {
+        await this.orders.update(id, { status });
+        return this.orders.findOneByOrFail({ id });
+    }
 };
 OrdersService = __decorate([
     Injectable(),
     __param(0, InjectRepository(Order)),
     __param(1, InjectRepository(Product)),
-    __metadata("design:paramtypes", [Repository, Repository])
+    __metadata("design:paramtypes", [Repository,
+        Repository])
 ], OrdersService);
 export { OrdersService };
 //# sourceMappingURL=orders.service.js.map
