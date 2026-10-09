@@ -9,7 +9,7 @@ Production-oriented NestJS backend for the HSG Texture storefront.
 - PostgreSQL with TypeORM
 - Neon Managed Better Auth with API-side JWT verification
 - Admin/customer roles
-- Products, categories and order management, including uploaded product galleries and optional composition, width, feel and care details
+- Products, categories and order management, including uploaded product galleries, optional composition, width, feel and care details, and per-product sale units (trouser or item)
 - DTO validation, CORS, Helmet and rate limiting
 - Dockerized local PostgreSQL and production image
 
