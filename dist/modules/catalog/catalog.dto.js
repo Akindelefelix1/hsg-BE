@@ -78,7 +78,12 @@ export class CreateProductDto {
     slug;
     price;
     categoryId;
+    saleUnit;
     description;
+    composition;
+    width;
+    feel;
+    care;
     color;
     texture;
     badge;
@@ -109,10 +114,36 @@ __decorate([
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "categoryId", void 0);
 __decorate([
+    ApiProperty({ required: false, enum: ['trouser', 'item'], description: 'Unit used for product pricing and quantities.' }),
+    IsOptional(),
+    IsIn(['trouser', 'item']),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "saleUnit", void 0);
+__decorate([
     IsOptional(),
     IsString(),
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "description", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "composition", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "width", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "feel", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "care", void 0);
 __decorate([
     IsOptional(),
     IsHexColor(),

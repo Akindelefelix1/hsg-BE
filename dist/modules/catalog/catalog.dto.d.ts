@@ -20,7 +20,12 @@ export declare class CreateProductDto {
     slug: string;
     price: number;
     categoryId: string;
+    saleUnit?: 'trouser' | 'item';
     description?: string;
+    composition?: string;
+    width?: string;
+    feel?: string;
+    care?: string;
     color?: string;
     texture?: string;
     badge?: string;

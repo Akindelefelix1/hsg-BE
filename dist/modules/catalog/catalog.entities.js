@@ -70,8 +70,13 @@ let Product = class Product {
     slug;
     name;
     price;
+    saleUnit;
     currency;
     description;
+    composition;
+    width;
+    feel;
+    care;
     color;
     texture;
     badge;
@@ -102,6 +107,10 @@ __decorate([
     __metadata("design:type", Number)
 ], Product.prototype, "price", void 0);
 __decorate([
+    Column({ type: 'varchar', default: 'trouser' }),
+    __metadata("design:type", String)
+], Product.prototype, "saleUnit", void 0);
+__decorate([
     Column({ default: 'NGN' }),
     __metadata("design:type", String)
 ], Product.prototype, "currency", void 0);
@@ -109,6 +118,22 @@ __decorate([
     Column({ default: '' }),
     __metadata("design:type", String)
 ], Product.prototype, "description", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "composition", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "width", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "feel", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "care", void 0);
 __decorate([
     Column({ default: '#183b8f' }),
     __metadata("design:type", String)

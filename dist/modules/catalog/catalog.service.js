@@ -29,7 +29,7 @@ let CatalogService = class CatalogService {
     async createCategory(dto) { const sortOrder = dto.sortOrder ?? await this.categories.countBy({ section: dto.section ?? 'fabric' }); return this.categories.save(this.categories.create(Object.assign({}, dto, { sortOrder }))); }
     async updateCategory(id, dto) { await this.categories.update(id, dto); return this.categories.findOneByOrFail({ id }); }
     async deleteCategory(id) { await this.categories.softDelete(id); }
-    async createProduct(dto) { const category = await this.categories.findOneByOrFail({ id: dto.categoryId }); return this.products.save(this.products.create(Object.assign({}, dto, { category }))); }
+    async createProduct(dto) { const category = await this.categories.findOneByOrFail({ id: dto.categoryId }); return this.products.save(this.products.create(Object.assign({}, dto, { saleUnit: dto.saleUnit ?? (category.section === 'accessories' ? 'item' : 'trouser'), category }))); }
     async updateProduct(id, dto) { const { categoryId, ...data } = dto; const category = categoryId ? await this.categories.findOneByOrFail({ id: categoryId }) : undefined; await this.products.update(id, Object.assign({}, data, category ? { category } : {})); return this.products.findOneByOrFail({ id }); }
     async deleteProduct(id) { await this.products.softDelete(id); }
 };

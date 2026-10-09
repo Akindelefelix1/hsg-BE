@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsEmail, IsEnum, IsNumber, IsOptional, IsPhoneNumber, IsString, IsUUID, Min, ValidateNested } from 'class-validator';
+import { IsArray, IsEmail, IsEnum, IsNumber, IsOptional, IsString, IsUUID, Matches, Min, ValidateNested } from 'class-validator';
 import { OrderStatus } from './order.entities.js';
 class OrderLineDto {
     productId;
@@ -39,8 +39,8 @@ __decorate([
     __metadata("design:type", String)
 ], CreateOrderDto.prototype, "customerName", void 0);
 __decorate([
-    ApiProperty(),
-    IsPhoneNumber(),
+    ApiProperty({ example: '+2348012345678', description: 'Accepts Nigerian international (+234...) or local (080...) format.' }),
+    Matches(/^(?:\+234[789][01]\d{8}|0[789][01]\d{8})$/),
     __metadata("design:type", String)
 ], CreateOrderDto.prototype, "phone", void 0);
 __decorate([

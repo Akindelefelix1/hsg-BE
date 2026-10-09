@@ -21,8 +21,13 @@ export declare class Product {
     slug: string;
     name: string;
     price: number;
+    saleUnit: 'trouser' | 'item';
     currency: string;
     description: string;
+    composition?: string;
+    width?: string;
+    feel?: string;
+    care?: string;
     color: string;
     texture: string;
     badge?: string;
