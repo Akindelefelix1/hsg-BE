@@ -1,3 +1,9 @@
+export type ProductMedia = {
+    key: string;
+    url: string;
+    name: string;
+    type: 'image' | 'video';
+};
 export declare class Category {
     id: string;
     name: string;
@@ -16,8 +22,11 @@ export declare class Product {
     price: number;
     currency: string;
     description: string;
+    color: string;
+    texture: string;
+    badge?: string;
     imageUrl?: string;
-    gallery: string[];
+    gallery: ProductMedia[];
     active: boolean;
     stock: number;
     category: Category;

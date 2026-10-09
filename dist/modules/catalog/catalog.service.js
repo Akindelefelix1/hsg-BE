@@ -25,6 +25,7 @@ let CatalogService = class CatalogService {
     getProduct(slug) { return this.products.findOneByOrFail({ slug, active: true }).catch(() => { throw new NotFoundException('Product not found'); }); }
     listCategories() { return this.categories.find({ where: { active: true }, order: { name: 'ASC' } }); }
     listAdminCategories() { return this.categories.find({ order: { createdAt: 'ASC' } }); }
+    listAdminProducts() { return this.products.find({ order: { createdAt: 'DESC' } }); }
     createCategory(dto) { return this.categories.save(this.categories.create(dto)); }
     async updateCategory(id, dto) { await this.categories.update(id, dto); return this.categories.findOneByOrFail({ id }); }
     async deleteCategory(id) { await this.categories.softDelete(id); }

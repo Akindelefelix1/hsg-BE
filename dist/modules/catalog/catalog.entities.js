@@ -67,6 +67,9 @@ let Product = class Product {
     price;
     currency;
     description;
+    color;
+    texture;
+    badge;
     imageUrl;
     gallery;
     active;
@@ -101,6 +104,18 @@ __decorate([
     Column({ default: '' }),
     __metadata("design:type", String)
 ], Product.prototype, "description", void 0);
+__decorate([
+    Column({ default: '#183b8f' }),
+    __metadata("design:type", String)
+], Product.prototype, "color", void 0);
+__decorate([
+    Column({ default: 'woven' }),
+    __metadata("design:type", String)
+], Product.prototype, "texture", void 0);
+__decorate([
+    Column({ nullable: true }),
+    __metadata("design:type", String)
+], Product.prototype, "badge", void 0);
 __decorate([
     Column({ nullable: true }),
     __metadata("design:type", String)

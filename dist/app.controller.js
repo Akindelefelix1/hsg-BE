@@ -18,6 +18,9 @@ let AppController = class AppController {
     getHello() {
         return this.appService.getHello();
     }
+    getHealth() {
+        return this.appService.getHello();
+    }
 };
 __decorate([
     Get(),
@@ -25,9 +28,15 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", String)
 ], AppController.prototype, "getHello", null);
+__decorate([
+    Get('health'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", String)
+], AppController.prototype, "getHealth", null);
 AppController = __decorate([
     ApiTags('system'),
-    Controller('health'),
+    Controller(),
     __metadata("design:paramtypes", [AppService])
 ], AppController);
 export { AppController };

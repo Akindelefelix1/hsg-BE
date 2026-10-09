@@ -11,6 +11,7 @@ export declare class AdminCatalogController {
     private catalog;
     constructor(catalog: CatalogService);
     categories(): Promise<import("./catalog.entities.js").Category[]>;
+    products(): Promise<import("./catalog.entities.js").Product[]>;
     createProduct(dto: CreateProductDto): Promise<import("./catalog.entities.js").Product>;
     updateProduct(id: string, dto: UpdateProductDto): Promise<import("./catalog.entities.js").Product>;
     deleteProduct(id: string): Promise<void>;

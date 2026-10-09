@@ -9,6 +9,7 @@ export declare class CatalogService {
     getProduct(slug: string): Promise<Product>;
     listCategories(): Promise<Category[]>;
     listAdminCategories(): Promise<Category[]>;
+    listAdminProducts(): Promise<Product[]>;
     createCategory(dto: CreateCategoryDto): Promise<Category>;
     updateCategory(id: string, dto: UpdateCategoryDto): Promise<Category>;
     deleteCategory(id: string): Promise<void>;

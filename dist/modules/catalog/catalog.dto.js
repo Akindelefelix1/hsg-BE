@@ -7,8 +7,9 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
+import { Type } from 'class-transformer';
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsIn, IsInt, IsNumber, IsOptional, IsString, IsUrl, IsUUID, Min } from 'class-validator';
+import { IsArray, IsBoolean, IsHexColor, IsIn, IsInt, IsNumber, IsOptional, IsString, IsUrl, IsUUID, Min, ValidateNested } from 'class-validator';
 export class CreateCategoryDto {
     name;
     slug;
@@ -43,12 +44,37 @@ __decorate([
 ], CreateCategoryDto.prototype, "active", void 0);
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {
 }
+export class ProductMediaDto {
+    key;
+    url;
+    name;
+    type;
+}
+__decorate([
+    IsString(),
+    __metadata("design:type", String)
+], ProductMediaDto.prototype, "key", void 0);
+__decorate([
+    IsUrl({ require_tld: false }),
+    __metadata("design:type", String)
+], ProductMediaDto.prototype, "url", void 0);
+__decorate([
+    IsString(),
+    __metadata("design:type", String)
+], ProductMediaDto.prototype, "name", void 0);
+__decorate([
+    IsIn(['image', 'video']),
+    __metadata("design:type", String)
+], ProductMediaDto.prototype, "type", void 0);
 export class CreateProductDto {
     name;
     slug;
     price;
     categoryId;
     description;
+    color;
+    texture;
+    badge;
     imageUrl;
     gallery;
     stock;
@@ -82,13 +108,29 @@ __decorate([
 ], CreateProductDto.prototype, "description", void 0);
 __decorate([
     IsOptional(),
+    IsHexColor(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "color", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "texture", void 0);
+__decorate([
+    IsOptional(),
+    IsString(),
+    __metadata("design:type", String)
+], CreateProductDto.prototype, "badge", void 0);
+__decorate([
+    IsOptional(),
     IsUrl({ require_tld: false }),
     __metadata("design:type", String)
 ], CreateProductDto.prototype, "imageUrl", void 0);
 __decorate([
     IsOptional(),
     IsArray(),
-    IsUrl({ require_tld: false }, { each: true }),
+    ValidateNested({ each: true }),
+    Type(() => ProductMediaDto),
     __metadata("design:type", Array)
 ], CreateProductDto.prototype, "gallery", void 0);
 __decorate([

@@ -60,6 +60,7 @@ let AdminCatalogController = class AdminCatalogController {
         this.catalog = catalog;
     }
     categories() { return this.catalog.listAdminCategories(); }
+    products() { return this.catalog.listAdminProducts(); }
     createProduct(dto) { return this.catalog.createProduct(dto); }
     updateProduct(id, dto) { return this.catalog.updateProduct(id, dto); }
     deleteProduct(id) { return this.catalog.deleteProduct(id); }
@@ -73,6 +74,12 @@ __decorate([
     __metadata("design:paramtypes", []),
     __metadata("design:returntype", void 0)
 ], AdminCatalogController.prototype, "categories", null);
+__decorate([
+    Get('products'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AdminCatalogController.prototype, "products", null);
 __decorate([
     Post('products'),
     __param(0, Body()),
