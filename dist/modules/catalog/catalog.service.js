@@ -26,7 +26,7 @@ let CatalogService = class CatalogService {
     listCategories() { return this.categories.find({ where: { active: true }, order: { sortOrder: 'ASC', createdAt: 'ASC' } }); }
     listAdminCategories() { return this.categories.find({ order: { sortOrder: 'ASC', createdAt: 'ASC' } }); }
     listAdminProducts() { return this.products.find({ order: { createdAt: 'DESC' } }); }
-    async createCategory(dto) { const sortOrder = dto.sortOrder ?? await this.categories.countBy({ section: dto.section ?? 'fabric' }); return this.categories.save(this.categories.create({ ...dto, sortOrder })); }
+    async createCategory(dto) { const sortOrder = dto.sortOrder ?? await this.categories.countBy({ section: dto.section ?? 'fabric' }); return this.categories.save(this.categories.create(Object.assign({}, dto, { sortOrder }))); }
     async updateCategory(id, dto) { await this.categories.update(id, dto); return this.categories.findOneByOrFail({ id }); }
     async deleteCategory(id) { await this.categories.softDelete(id); }
     async createProduct(dto) { const category = await this.categories.findOneByOrFail({ id: dto.categoryId }); return this.products.save(this.products.create(Object.assign({}, dto, { category }))); }
