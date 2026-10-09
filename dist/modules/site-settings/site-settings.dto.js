@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { IsOptional, IsString } from "class-validator";
+import { IsObject, IsOptional, IsString } from "class-validator";
 export class UpdateSiteSettingsDto {
     announcement;
     heroEyebrow;
@@ -88,4 +88,11 @@ __decorate([
     IsString(),
     __metadata("design:type", String)
 ], UpdateSiteSettingsDto.prototype, "heroImageKey", void 0);
+export class UpdateStorySettingsDto {
+    story;
+}
+__decorate([
+    IsObject(),
+    __metadata("design:type", Object)
+], UpdateStorySettingsDto.prototype, "story", void 0);
 //# sourceMappingURL=site-settings.dto.js.map

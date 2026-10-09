@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { StorageModule } from "../storage/storage.module.js";
-import { AdminSiteSettingsController, SiteSettingsController, } from "./site-settings.controller.js";
+import { AdminSiteSettingsController, AdminStoryController, SiteSettingsController, StoryController, } from "./site-settings.controller.js";
 import { SiteSettings } from "./site-settings.entity.js";
 import { SiteSettingsService } from "./site-settings.service.js";
 let SiteSettingsModule = class SiteSettingsModule {
@@ -15,7 +15,12 @@ let SiteSettingsModule = class SiteSettingsModule {
 SiteSettingsModule = __decorate([
     Module({
         imports: [TypeOrmModule.forFeature([SiteSettings]), StorageModule],
-        controllers: [SiteSettingsController, AdminSiteSettingsController],
+        controllers: [
+            SiteSettingsController,
+            AdminSiteSettingsController,
+            StoryController,
+            AdminStoryController,
+        ],
         providers: [SiteSettingsService],
     })
 ], SiteSettingsModule);

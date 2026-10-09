@@ -16,5 +16,6 @@ export declare class SiteSettings {
     id: string;
     content: SiteSettingsContent;
     heroImageKey?: string | null;
+    story?: Record<string, unknown> | null;
     updatedAt: Date;
 }

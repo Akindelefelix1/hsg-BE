@@ -13,7 +13,7 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 import { Body, Controller, Get, Put, UseGuards } from "@nestjs/common";
 import { ApiBearerAuth, ApiTags } from "@nestjs/swagger";
 import { JwtAuthGuard, Public, Role, Roles, RolesGuard, } from "../../common/auth.js";
-import { UpdateSiteSettingsDto } from "./site-settings.dto.js";
+import { UpdateSiteSettingsDto, UpdateStorySettingsDto, } from "./site-settings.dto.js";
 import { SiteSettingsService } from "./site-settings.service.js";
 let SiteSettingsController = class SiteSettingsController {
     settings;
@@ -71,4 +71,60 @@ AdminSiteSettingsController = __decorate([
     __metadata("design:paramtypes", [SiteSettingsService])
 ], AdminSiteSettingsController);
 export { AdminSiteSettingsController };
+let StoryController = class StoryController {
+    settings;
+    constructor(settings) {
+        this.settings = settings;
+    }
+    get() {
+        return this.settings.getStory();
+    }
+};
+__decorate([
+    Public(),
+    Get(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], StoryController.prototype, "get", null);
+StoryController = __decorate([
+    ApiTags("story"),
+    Controller("story"),
+    __metadata("design:paramtypes", [SiteSettingsService])
+], StoryController);
+export { StoryController };
+let AdminStoryController = class AdminStoryController {
+    settings;
+    constructor(settings) {
+        this.settings = settings;
+    }
+    get() {
+        return this.settings.getStory();
+    }
+    update(dto) {
+        return this.settings.updateStory(dto.story);
+    }
+};
+__decorate([
+    Get(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AdminStoryController.prototype, "get", null);
+__decorate([
+    Put(),
+    __param(0, Body()),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [UpdateStorySettingsDto]),
+    __metadata("design:returntype", void 0)
+], AdminStoryController.prototype, "update", null);
+AdminStoryController = __decorate([
+    ApiTags("admin story"),
+    ApiBearerAuth(),
+    Roles(Role.ADMIN),
+    UseGuards(JwtAuthGuard, RolesGuard),
+    Controller("admin/story"),
+    __metadata("design:paramtypes", [SiteSettingsService])
+], AdminStoryController);
+export { AdminStoryController };
 //# sourceMappingURL=site-settings.controller.js.map

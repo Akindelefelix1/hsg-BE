@@ -12,6 +12,7 @@ let SiteSettings = class SiteSettings {
     id;
     content;
     heroImageKey;
+    story;
     updatedAt;
 };
 __decorate([
@@ -26,6 +27,10 @@ __decorate([
     Column({ type: "varchar", nullable: true }),
     __metadata("design:type", Object)
 ], SiteSettings.prototype, "heroImageKey", void 0);
+__decorate([
+    Column({ type: "jsonb", nullable: true }),
+    __metadata("design:type", Object)
+], SiteSettings.prototype, "story", void 0);
 __decorate([
     UpdateDateColumn(),
     __metadata("design:type", Date)

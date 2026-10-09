@@ -13,3 +13,6 @@ export declare class UpdateSiteSettingsDto {
     imageNote?: string;
     heroImageKey?: string;
 }
+export declare class UpdateStorySettingsDto {
+    story: Record<string, unknown>;
+}

@@ -1,4 +1,4 @@
-import { UpdateSiteSettingsDto } from "./site-settings.dto.js";
+import { UpdateSiteSettingsDto, UpdateStorySettingsDto } from "./site-settings.dto.js";
 import { SiteSettingsService } from "./site-settings.service.js";
 export declare class SiteSettingsController {
     private readonly settings;
@@ -54,5 +54,49 @@ export declare class AdminSiteSettingsController {
         trustOne: string;
         trustTwo: string;
         imageNote: string;
+    }>;
+}
+export declare class StoryController {
+    private readonly settings;
+    constructor(settings: SiteSettingsService);
+    get(): Promise<{
+        collageMedia: ({
+            url: string;
+            key: string;
+            name: string;
+            type: string;
+        } | null)[];
+        feedback: {
+            mediaUrl: string | undefined;
+            mediaKey?: string;
+        }[];
+    }>;
+}
+export declare class AdminStoryController {
+    private readonly settings;
+    constructor(settings: SiteSettingsService);
+    get(): Promise<{
+        collageMedia: ({
+            url: string;
+            key: string;
+            name: string;
+            type: string;
+        } | null)[];
+        feedback: {
+            mediaUrl: string | undefined;
+            mediaKey?: string;
+        }[];
+    }>;
+    update(dto: UpdateStorySettingsDto): Promise<{
+        collageMedia: ({
+            url: string;
+            key: string;
+            name: string;
+            type: string;
+        } | null)[];
+        feedback: {
+            mediaUrl: string | undefined;
+            mediaKey?: string;
+        }[];
     }>;
 }
