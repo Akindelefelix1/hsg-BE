@@ -50,8 +50,7 @@ let SiteSettingsService = class SiteSettingsService {
         let heroImageUrl;
         if (record.heroImageKey) {
             try {
-                heroImageUrl = (await this.storage.createReadUrl(record.heroImageKey))
-                    .url;
+                heroImageUrl = this.storage.createReadUrl(record.heroImageKey).url;
             }
             catch {
             }
@@ -65,6 +64,7 @@ let SiteSettingsService = class SiteSettingsService {
     }
     async update(dto) {
         const current = await this.record();
+        const previousHeroImageKey = current.heroImageKey;
         const { heroImageKey, ...content } = dto;
         current.content = {
             ...defaultSiteSettings,
@@ -74,6 +74,15 @@ let SiteSettingsService = class SiteSettingsService {
         if (heroImageKey !== undefined)
             current.heroImageKey = heroImageKey;
         await this.settings.save(current);
+        if (heroImageKey &&
+            previousHeroImageKey &&
+            heroImageKey !== previousHeroImageKey) {
+            try {
+                await this.storage.remove(previousHeroImageKey);
+            }
+            catch {
+            }
+        }
         return this.get();
     }
 };
