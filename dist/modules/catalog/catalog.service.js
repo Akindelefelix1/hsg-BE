@@ -23,10 +23,10 @@ let CatalogService = class CatalogService {
     }
     listProducts(search, category) { return this.products.find({ where: { active: true, ...(search ? { name: ILike(`%${search}%`) } : {}), ...(category ? { category: { slug: category } } : {}) }, order: { createdAt: 'DESC' } }); }
     getProduct(slug) { return this.products.findOneByOrFail({ slug, active: true }).catch(() => { throw new NotFoundException('Product not found'); }); }
-    listCategories() { return this.categories.find({ where: { active: true }, order: { name: 'ASC' } }); }
-    listAdminCategories() { return this.categories.find({ order: { createdAt: 'ASC' } }); }
+    listCategories() { return this.categories.find({ where: { active: true }, order: { sortOrder: 'ASC', createdAt: 'ASC' } }); }
+    listAdminCategories() { return this.categories.find({ order: { sortOrder: 'ASC', createdAt: 'ASC' } }); }
     listAdminProducts() { return this.products.find({ order: { createdAt: 'DESC' } }); }
-    createCategory(dto) { return this.categories.save(this.categories.create(dto)); }
+    async createCategory(dto) { const sortOrder = dto.sortOrder ?? await this.categories.countBy({ section: dto.section ?? 'fabric' }); return this.categories.save(this.categories.create({ ...dto, sortOrder })); }
     async updateCategory(id, dto) { await this.categories.update(id, dto); return this.categories.findOneByOrFail({ id }); }
     async deleteCategory(id) { await this.categories.softDelete(id); }
     async createProduct(dto) { const category = await this.categories.findOneByOrFail({ id: dto.categoryId }); return this.products.save(this.products.create(Object.assign({}, dto, { category }))); }

@@ -14,6 +14,7 @@ let Category = class Category {
     slug;
     description;
     section;
+    sortOrder;
     active;
     deletedAt;
     createdAt;
@@ -40,6 +41,10 @@ __decorate([
     Column({ default: 'fabric' }),
     __metadata("design:type", String)
 ], Category.prototype, "section", void 0);
+__decorate([
+    Column({ default: 0 }),
+    __metadata("design:type", Number)
+], Category.prototype, "sortOrder", void 0);
 __decorate([
     Column({ default: true }),
     __metadata("design:type", Boolean)

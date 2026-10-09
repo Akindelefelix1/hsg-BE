@@ -15,6 +15,7 @@ export class CreateCategoryDto {
     slug;
     description;
     section;
+    sortOrder;
     active;
 }
 __decorate([
@@ -37,6 +38,12 @@ __decorate([
     IsIn(['fabric', 'accessories']),
     __metadata("design:type", String)
 ], CreateCategoryDto.prototype, "section", void 0);
+__decorate([
+    IsOptional(),
+    IsInt(),
+    Min(0),
+    __metadata("design:type", Number)
+], CreateCategoryDto.prototype, "sortOrder", void 0);
 __decorate([
     IsOptional(),
     IsBoolean(),

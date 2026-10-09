@@ -10,6 +10,7 @@ export declare class Category {
     slug: string;
     description: string;
     section: 'fabric' | 'accessories';
+    sortOrder: number;
     active: boolean;
     deletedAt?: Date;
     createdAt: Date;
