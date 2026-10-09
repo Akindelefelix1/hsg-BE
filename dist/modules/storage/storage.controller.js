@@ -10,7 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Body, Controller, Delete, Get, Param, Post, UseGuards, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard, Role, Roles, RolesGuard } from '../../common/auth.js';
 import { UploadRequestDto } from './storage.dto.js';
@@ -20,15 +20,9 @@ let StorageController = class StorageController {
     constructor(storage) {
         this.storage = storage;
     }
-    upload(dto) {
-        return this.storage.createUploadUrl(dto.key, dto.contentType);
-    }
-    read(key) {
-        return this.storage.createReadUrl(key);
-    }
-    remove(key) {
-        return this.storage.remove(key);
-    }
+    upload(dto) { return this.storage.createUploadUrl(dto.key, dto.contentType); }
+    read(key) { return this.storage.createReadUrl(key); }
+    remove(key) { return this.storage.remove(key); }
 };
 __decorate([
     Post('upload-url'),

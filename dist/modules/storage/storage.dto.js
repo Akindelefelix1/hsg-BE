@@ -16,7 +16,7 @@ export class UploadRequestDto {
 __decorate([
     ApiProperty({ example: 'seven-star/navy-wool.webp' }),
     IsString(),
-    Matches(/^[a-zA-Z0-9/_\-.]+$/),
+    Matches(/^(?!\/)(?!.*(?:^|\/)\.\.?($|\/))[a-zA-Z0-9][a-zA-Z0-9/_\-.]*$/),
     __metadata("design:type", String)
 ], UploadRequestDto.prototype, "key", void 0);
 __decorate([

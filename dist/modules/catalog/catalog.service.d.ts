@@ -8,6 +8,7 @@ export declare class CatalogService {
     listProducts(search?: string, category?: string): Promise<Product[]>;
     getProduct(slug: string): Promise<Product>;
     listCategories(): Promise<Category[]>;
+    listAdminCategories(): Promise<Category[]>;
     createCategory(dto: CreateCategoryDto): Promise<Category>;
     updateCategory(id: string, dto: UpdateCategoryDto): Promise<Category>;
     deleteCategory(id: string): Promise<void>;

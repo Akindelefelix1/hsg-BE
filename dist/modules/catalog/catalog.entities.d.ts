@@ -3,6 +3,7 @@ export declare class Category {
     name: string;
     slug: string;
     description: string;
+    section: 'fabric' | 'accessories';
     active: boolean;
     deletedAt?: Date;
     createdAt: Date;

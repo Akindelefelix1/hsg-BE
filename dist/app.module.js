@@ -30,9 +30,15 @@ AppModule = __decorate([
                         .default('development'),
                     PORT: Joi.number().default(4000),
                     DATABASE_URL: Joi.string().uri().required(),
+                    DIRECT_URL: Joi.string().uri().optional(),
+                    DB_SSL: Joi.string().valid('true', 'false').default('true'),
                     CORS_ORIGINS: Joi.string().required(),
-                    JWT_ACCESS_SECRET: Joi.string().min(32).required(),
-                    JWT_REFRESH_SECRET: Joi.string().min(32).required(),
+                    NEON_AUTH_BASE_URL: Joi.string()
+                        .uri({ scheme: ['https'] })
+                        .required(),
+                    NEON_AUTH_JWKS_URL: Joi.string()
+                        .uri({ scheme: ['https'] })
+                        .required(),
                     AWS_REGION: Joi.string().required(),
                     AWS_ACCESS_KEY_ID: Joi.string().required(),
                     AWS_SECRET_ACCESS_KEY: Joi.string().required(),

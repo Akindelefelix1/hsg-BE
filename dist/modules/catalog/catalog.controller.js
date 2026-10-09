@@ -10,25 +10,19 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards, } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Patch, Post, Query, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard, Public, Role, Roles, RolesGuard, } from '../../common/auth.js';
+import { JwtAuthGuard, Public, Role, Roles, RolesGuard } from '../../common/auth.js';
 import { CatalogService } from './catalog.service.js';
-import { CreateCategoryDto, CreateProductDto, UpdateCategoryDto, UpdateProductDto, } from './catalog.dto.js';
+import { CreateCategoryDto, CreateProductDto, UpdateCategoryDto, UpdateProductDto } from './catalog.dto.js';
 let CatalogController = class CatalogController {
     catalog;
     constructor(catalog) {
         this.catalog = catalog;
     }
-    products(search, category) {
-        return this.catalog.listProducts(search, category);
-    }
-    product(slug) {
-        return this.catalog.getProduct(slug);
-    }
-    categories() {
-        return this.catalog.listCategories();
-    }
+    products(search, category) { return this.catalog.listProducts(search, category); }
+    product(slug) { return this.catalog.getProduct(slug); }
+    categories() { return this.catalog.listCategories(); }
 };
 __decorate([
     Public(),
@@ -65,25 +59,20 @@ let AdminCatalogController = class AdminCatalogController {
     constructor(catalog) {
         this.catalog = catalog;
     }
-    createProduct(dto) {
-        return this.catalog.createProduct(dto);
-    }
-    updateProduct(id, dto) {
-        return this.catalog.updateProduct(id, dto);
-    }
-    deleteProduct(id) {
-        return this.catalog.deleteProduct(id);
-    }
-    createCategory(dto) {
-        return this.catalog.createCategory(dto);
-    }
-    updateCategory(id, dto) {
-        return this.catalog.updateCategory(id, dto);
-    }
-    deleteCategory(id) {
-        return this.catalog.deleteCategory(id);
-    }
+    categories() { return this.catalog.listAdminCategories(); }
+    createProduct(dto) { return this.catalog.createProduct(dto); }
+    updateProduct(id, dto) { return this.catalog.updateProduct(id, dto); }
+    deleteProduct(id) { return this.catalog.deleteProduct(id); }
+    createCategory(dto) { return this.catalog.createCategory(dto); }
+    updateCategory(id, dto) { return this.catalog.updateCategory(id, dto); }
+    deleteCategory(id) { return this.catalog.deleteCategory(id); }
 };
+__decorate([
+    Get('categories'),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", void 0)
+], AdminCatalogController.prototype, "categories", null);
 __decorate([
     Post('products'),
     __param(0, Body()),

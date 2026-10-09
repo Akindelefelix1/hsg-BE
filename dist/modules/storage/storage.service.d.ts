@@ -2,16 +2,17 @@ import { ConfigService } from '@nestjs/config';
 export declare class StorageService {
     private readonly client;
     private readonly bucket;
+    private readonly endpoint;
     constructor(config: ConfigService);
     createUploadUrl(key: string, contentType: string): Promise<{
         key: string;
         url: string;
+        contentType: string;
         expiresIn: number;
     }>;
-    createReadUrl(key: string): Promise<{
+    createReadUrl(key: string): {
         key: string;
         url: string;
-        expiresIn: number;
-    }>;
+    };
     remove(key: string): Promise<void>;
 }

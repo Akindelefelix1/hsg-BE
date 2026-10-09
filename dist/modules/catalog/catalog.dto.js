@@ -8,11 +8,12 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { IsArray, IsBoolean, IsInt, IsNumber, IsOptional, IsString, IsUrl, IsUUID, Min, } from 'class-validator';
+import { IsArray, IsBoolean, IsIn, IsInt, IsNumber, IsOptional, IsString, IsUrl, IsUUID, Min } from 'class-validator';
 export class CreateCategoryDto {
     name;
     slug;
     description;
+    section;
     active;
 }
 __decorate([
@@ -30,6 +31,11 @@ __decorate([
     IsString(),
     __metadata("design:type", String)
 ], CreateCategoryDto.prototype, "description", void 0);
+__decorate([
+    IsOptional(),
+    IsIn(['fabric', 'accessories']),
+    __metadata("design:type", String)
+], CreateCategoryDto.prototype, "section", void 0);
 __decorate([
     IsOptional(),
     IsBoolean(),

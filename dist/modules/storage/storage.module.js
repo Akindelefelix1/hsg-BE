@@ -10,11 +10,7 @@ import { StorageService } from './storage.service.js';
 let StorageModule = class StorageModule {
 };
 StorageModule = __decorate([
-    Module({
-        controllers: [StorageController],
-        providers: [StorageService],
-        exports: [StorageService],
-    })
+    Module({ controllers: [StorageController], providers: [StorageService], exports: [StorageService] })
 ], StorageModule);
 export { StorageModule };
 //# sourceMappingURL=storage.module.js.map

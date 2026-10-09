@@ -1,5 +1,5 @@
-import { ApiProperty, PartialType } from '@nestjs/swagger'; import { IsArray, IsBoolean, IsInt, IsNumber, IsOptional, IsString, IsUrl, IsUUID, Min } from 'class-validator';
-export class CreateCategoryDto { @ApiProperty() @IsString() name!:string; @ApiProperty() @IsString() slug!:string; @IsOptional() @IsString() description?:string; @IsOptional() @IsBoolean() active?:boolean; }
+import { ApiProperty, PartialType } from '@nestjs/swagger'; import { IsArray, IsBoolean, IsIn, IsInt, IsNumber, IsOptional, IsString, IsUrl, IsUUID, Min } from 'class-validator';
+export class CreateCategoryDto { @ApiProperty() @IsString() name!:string; @ApiProperty() @IsString() slug!:string; @IsOptional() @IsString() description?:string; @IsOptional() @IsIn(['fabric','accessories']) section?:'fabric'|'accessories'; @IsOptional() @IsBoolean() active?:boolean; }
 export class UpdateCategoryDto extends PartialType(CreateCategoryDto) {}
 export class CreateProductDto { @ApiProperty() @IsString() name!:string; @ApiProperty() @IsString() slug!:string; @ApiProperty() @IsNumber() @Min(0) price!:number; @ApiProperty() @IsUUID() categoryId!:string; @IsOptional() @IsString() description?:string; @IsOptional() @IsUrl({require_tld:false}) imageUrl?:string; @IsOptional() @IsArray() @IsUrl({require_tld:false},{each:true}) gallery?:string[]; @IsOptional() @IsInt() @Min(0) stock?:number; @IsOptional() @IsBoolean() active?:boolean; }
 export class UpdateProductDto extends PartialType(CreateProductDto) {}

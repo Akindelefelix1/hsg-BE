@@ -6,18 +6,13 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 };
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { AdminCatalogController, CatalogController, } from './catalog.controller.js';
+import { AdminCatalogController, CatalogController } from './catalog.controller.js';
 import { Category, Product } from './catalog.entities.js';
 import { CatalogService } from './catalog.service.js';
 let CatalogModule = class CatalogModule {
 };
 CatalogModule = __decorate([
-    Module({
-        imports: [TypeOrmModule.forFeature([Category, Product])],
-        controllers: [CatalogController, AdminCatalogController],
-        providers: [CatalogService],
-        exports: [CatalogService, TypeOrmModule],
-    })
+    Module({ imports: [TypeOrmModule.forFeature([Category, Product])], controllers: [CatalogController, AdminCatalogController], providers: [CatalogService], exports: [CatalogService, TypeOrmModule] })
 ], CatalogModule);
 export { CatalogModule };
 //# sourceMappingURL=catalog.module.js.map

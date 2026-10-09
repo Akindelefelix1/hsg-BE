@@ -7,68 +7,72 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { ConflictException, Injectable, UnauthorizedException, } from '@nestjs/common';
-import { JwtService } from '@nestjs/jwt';
-import * as bcrypt from 'bcrypt';
-import { UsersService } from '../users/users.service.js';
+import { Injectable, ServiceUnavailableException, UnauthorizedException, } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { DataSource } from 'typeorm';
+import { createRemoteJWKSet, errors, jwtVerify } from 'jose';
+import { Role } from '../../common/roles.js';
 let AuthService = class AuthService {
-    users;
-    jwt;
-    constructor(users, jwt) {
-        this.users = users;
-        this.jwt = jwt;
+    dataSource;
+    issuer;
+    jwks;
+    constructor(config, dataSource) {
+        this.dataSource = dataSource;
+        const authBaseUrl = config.getOrThrow('NEON_AUTH_BASE_URL');
+        const jwksUrl = config.getOrThrow('NEON_AUTH_JWKS_URL');
+        const authUrl = new URL(authBaseUrl);
+        if (authUrl.protocol !== 'https:') {
+            throw new Error('NEON_AUTH_BASE_URL must use HTTPS');
+        }
+        this.issuer = authUrl.origin;
+        const keySetUrl = new URL(jwksUrl);
+        if (keySetUrl.protocol !== 'https:' || keySetUrl.origin !== this.issuer) {
+            throw new Error('NEON_AUTH_JWKS_URL must use HTTPS and match the Auth URL origin');
+        }
+        this.jwks = createRemoteJWKSet(keySetUrl);
     }
-    async register(dto) {
-        if (await this.users.findByEmail(dto.email))
-            throw new ConflictException('Email is already registered');
-        const user = await this.users.create({
-            name: dto.name,
-            email: dto.email.toLowerCase(),
-            passwordHash: await bcrypt.hash(dto.password, 12),
-        });
-        return this.issue(user.id, user.email, user.role);
-    }
-    async login(dto) {
-        const user = await this.users.findByEmail(dto.email, true);
-        if (!user?.active ||
-            !(await bcrypt.compare(dto.password, user.passwordHash)))
-            throw new UnauthorizedException('Invalid credentials');
-        return this.issue(user.id, user.email, user.role);
-    }
-    async refresh(token) {
+    async verifyAccessToken(token) {
+        let payload;
         try {
-            const payload = await this.jwt.verifyAsync(token, { secret: process.env.JWT_REFRESH_SECRET });
-            const user = await this.users.findByEmail(payload.email, true);
-            if (!user?.refreshTokenHash ||
-                !(await bcrypt.compare(token, user.refreshTokenHash)))
-                throw new Error();
-            return this.issue(user.id, user.email, user.role);
+            ({ payload } = await jwtVerify(token, this.jwks, {
+                algorithms: ['EdDSA'],
+                issuer: this.issuer,
+                audience: this.issuer,
+            }));
         }
-        catch {
-            throw new UnauthorizedException('Invalid refresh token');
+        catch (error) {
+            if (error instanceof errors.JWKSTimeout) {
+                throw new ServiceUnavailableException('Neon Auth signing keys are temporarily unavailable');
+            }
+            if (error instanceof errors.JOSEError) {
+                throw new UnauthorizedException('Invalid or expired access token');
+            }
+            throw error;
         }
+        if (typeof payload.sub !== 'string' || typeof payload.email !== 'string') {
+            throw new UnauthorizedException('Invalid access token claims');
+        }
+        return {
+            id: payload.sub,
+            email: payload.email,
+            ...(typeof payload.name === 'string' ? { name: payload.name } : {}),
+        };
     }
-    async logout(userId) {
-        await this.users.setRefreshToken(userId, null);
-    }
-    async issue(sub, email, role) {
-        const payload = { sub, email, role };
-        const accessToken = await this.jwt.signAsync(payload, {
-            secret: process.env.JWT_ACCESS_SECRET,
-            expiresIn: '15m',
-        });
-        const refreshToken = await this.jwt.signAsync(payload, {
-            secret: process.env.JWT_REFRESH_SECRET,
-            expiresIn: '7d',
-        });
-        await this.users.setRefreshToken(sub, await bcrypt.hash(refreshToken, 12));
-        return { accessToken, refreshToken };
+    async getRole(userId) {
+        const users = await this.dataSource.query('SELECT "role" FROM neon_auth."user" WHERE "id" = $1', [userId]);
+        const storedRole = users[0]?.role;
+        if (storedRole === null || storedRole === undefined)
+            return null;
+        const roles = Array.isArray(storedRole)
+            ? storedRole
+            : storedRole.split(',').map((role) => role.trim());
+        return roles.includes(Role.ADMIN) ? Role.ADMIN : Role.CUSTOMER;
     }
 };
 AuthService = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [UsersService,
-        JwtService])
+    __metadata("design:paramtypes", [ConfigService,
+        DataSource])
 ], AuthService);
 export { AuthService };
 //# sourceMappingURL=auth.service.js.map

@@ -7,52 +7,74 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Injectable, SetMetadata, } from '@nestjs/common';
+import { ForbiddenException, Injectable, SetMetadata, UnauthorizedException, } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
-import { AuthGuard } from '@nestjs/passport';
-export var Role;
-(function (Role) {
-    Role["ADMIN"] = "admin";
-    Role["CUSTOMER"] = "customer";
-})(Role || (Role = {}));
+import { AuthService, } from '../modules/auth/auth.service.js';
+export { Role } from './roles.js';
 export const Public = () => SetMetadata('public', true);
 export const Roles = (...roles) => SetMetadata('roles', roles);
-let JwtAuthGuard = class JwtAuthGuard extends AuthGuard('jwt') {
+let JwtAuthGuard = class JwtAuthGuard {
     reflector;
-    constructor(reflector) {
-        super();
+    auth;
+    constructor(reflector, auth) {
         this.reflector = reflector;
+        this.auth = auth;
     }
-    canActivate(context) {
-        return (this.reflector.getAllAndOverride('public', [
+    async canActivate(context) {
+        if (this.reflector.getAllAndOverride('public', [
             context.getHandler(),
             context.getClass(),
-        ]) || super.canActivate(context));
+        ])) {
+            return true;
+        }
+        const request = context
+            .switchToHttp()
+            .getRequest();
+        const authorization = request.headers.authorization;
+        const match = typeof authorization === 'string'
+            ? /^Bearer\s+(\S+)$/i.exec(authorization)
+            : null;
+        if (!match)
+            throw new UnauthorizedException('Bearer token is required');
+        request.user = await this.auth.verifyAccessToken(match[1]);
+        return true;
     }
 };
 JwtAuthGuard = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [Reflector])
+    __metadata("design:paramtypes", [Reflector,
+        AuthService])
 ], JwtAuthGuard);
 export { JwtAuthGuard };
 let RolesGuard = class RolesGuard {
     reflector;
-    constructor(reflector) {
+    auth;
+    constructor(reflector, auth) {
         this.reflector = reflector;
+        this.auth = auth;
     }
-    canActivate(context) {
+    async canActivate(context) {
         const roles = this.reflector.getAllAndOverride('roles', [
             context.getHandler(),
             context.getClass(),
         ]);
         if (!roles?.length)
             return true;
-        return roles.includes(context.switchToHttp().getRequest().user.role);
+        const request = context
+            .switchToHttp()
+            .getRequest();
+        if (!request.user)
+            throw new UnauthorizedException();
+        const role = await this.auth.getRole(request.user.id);
+        if (!role || !roles.includes(role))
+            throw new ForbiddenException();
+        return true;
     }
 };
 RolesGuard = __decorate([
     Injectable(),
-    __metadata("design:paramtypes", [Reflector])
+    __metadata("design:paramtypes", [Reflector,
+        AuthService])
 ], RolesGuard);
 export { RolesGuard };
 //# sourceMappingURL=auth.js.map

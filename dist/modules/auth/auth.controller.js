@@ -10,67 +10,33 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Body, Controller, HttpCode, Post, Req, UseGuards, } from '@nestjs/common';
+import { Controller, Get, Req, UnauthorizedException, UseGuards, } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard, Public } from '../../common/auth.js';
+import { JwtAuthGuard } from '../../common/auth.js';
 import { AuthService } from './auth.service.js';
-import { LoginDto, RefreshDto, RegisterDto } from './auth.dto.js';
 let AuthController = class AuthController {
     auth;
     constructor(auth) {
         this.auth = auth;
     }
-    register(dto) {
-        return this.auth.register(dto);
-    }
-    login(dto) {
-        return this.auth.login(dto);
-    }
-    refresh(dto) {
-        return this.auth.refresh(dto.refreshToken);
-    }
-    logout(req) {
-        return this.auth.logout(req.user.id);
+    async me(req) {
+        const role = await this.auth.getRole(req.user.id);
+        if (!role)
+            throw new UnauthorizedException('Auth user was not found');
+        return { ...req.user, role };
     }
 };
 __decorate([
-    Public(),
-    Post('register'),
-    __param(0, Body()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [RegisterDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "register", null);
-__decorate([
-    Public(),
-    HttpCode(200),
-    Post('login'),
-    __param(0, Body()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [LoginDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "login", null);
-__decorate([
-    Public(),
-    HttpCode(200),
-    Post('refresh'),
-    __param(0, Body()),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [RefreshDto]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "refresh", null);
-__decorate([
-    ApiBearerAuth(),
-    UseGuards(JwtAuthGuard),
-    HttpCode(204),
-    Post('logout'),
+    Get('me'),
     __param(0, Req()),
     __metadata("design:type", Function),
     __metadata("design:paramtypes", [Object]),
-    __metadata("design:returntype", void 0)
-], AuthController.prototype, "logout", null);
+    __metadata("design:returntype", Promise)
+], AuthController.prototype, "me", null);
 AuthController = __decorate([
     ApiTags('auth'),
+    ApiBearerAuth(),
+    UseGuards(JwtAuthGuard),
     Controller('auth'),
     __metadata("design:paramtypes", [AuthService])
 ], AuthController);

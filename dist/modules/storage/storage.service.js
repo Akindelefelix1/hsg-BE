@@ -9,17 +9,22 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { DeleteObjectCommand, GetObjectCommand, PutObjectCommand, S3Client, } from '@aws-sdk/client-s3';
+import { DeleteObjectCommand, PutObjectCommand, S3Client, } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 let StorageService = class StorageService {
     client;
     bucket;
+    endpoint;
     constructor(config) {
         this.bucket = config.getOrThrow('STORAGE_BUCKET');
+        this.endpoint = config
+            .getOrThrow('AWS_ENDPOINT_URL_S3')
+            .replace(/\/+$/, '');
         this.client = new S3Client({
             region: config.getOrThrow('AWS_REGION'),
-            endpoint: config.getOrThrow('AWS_ENDPOINT_URL_S3'),
+            endpoint: this.endpoint,
             forcePathStyle: true,
+            requestChecksumCalculation: 'WHEN_REQUIRED',
             credentials: {
                 accessKeyId: config.getOrThrow('AWS_ACCESS_KEY_ID'),
                 secretAccessKey: config.getOrThrow('AWS_SECRET_ACCESS_KEY'),
@@ -31,12 +36,16 @@ let StorageService = class StorageService {
             Bucket: this.bucket,
             Key: key,
             ContentType: contentType,
-        }), { expiresIn: 300 });
-        return { key, url, expiresIn: 300 };
+        }), {
+            expiresIn: 300,
+            signableHeaders: new Set(['content-type']),
+        });
+        return { key, url, contentType, expiresIn: 300 };
     }
-    async createReadUrl(key) {
-        const url = await getSignedUrl(this.client, new GetObjectCommand({ Bucket: this.bucket, Key: key }), { expiresIn: 900 });
-        return { key, url, expiresIn: 900 };
+    createReadUrl(key) {
+        const encodedKey = key.split('/').map(encodeURIComponent).join('/');
+        const url = new URL(`${this.bucket}/${encodedKey}`, `${this.endpoint}/`).toString();
+        return { key, url };
     }
     async remove(key) {
         await this.client.send(new DeleteObjectCommand({ Bucket: this.bucket, Key: key }));

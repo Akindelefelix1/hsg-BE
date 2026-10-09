@@ -6,12 +6,12 @@ export declare class StorageController {
     upload(dto: UploadRequestDto): Promise<{
         key: string;
         url: string;
+        contentType: string;
         expiresIn: number;
     }>;
-    read(key: string): Promise<{
+    read(key: string): {
         key: string;
         url: string;
-        expiresIn: number;
-    }>;
+    };
     remove(key: string): Promise<void>;
 }

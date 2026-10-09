@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { IsArray, IsEmail, IsEnum, IsNumber, IsOptional, IsPhoneNumber, IsString, IsUUID, Min, ValidateNested, } from 'class-validator';
+import { IsArray, IsEmail, IsEnum, IsNumber, IsOptional, IsPhoneNumber, IsString, IsUUID, Min, ValidateNested } from 'class-validator';
 import { OrderStatus } from './order.entities.js';
 class OrderLineDto {
     productId;
@@ -23,7 +23,7 @@ __decorate([
 __decorate([
     ApiProperty(),
     IsNumber(),
-    Min(0.5),
+    Min(.5),
     __metadata("design:type", Number)
 ], OrderLineDto.prototype, "quantity", void 0);
 export class CreateOrderDto {

@@ -7,7 +7,9 @@ async function bootstrap() {
     const app = await NestFactory.create(AppModule);
     app.use(helmet());
     app.enableCors({
-        origin: (process.env.CORS_ORIGINS ?? 'http://localhost:3000').split(','),
+        origin: (process.env.CORS_ORIGINS ?? 'http://localhost:3000')
+            .split(',')
+            .map((origin) => origin.trim()),
         credentials: true,
     });
     app.setGlobalPrefix('api');

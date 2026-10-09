@@ -21,61 +21,22 @@ let CatalogService = class CatalogService {
         this.products = products;
         this.categories = categories;
     }
-    listProducts(search, category) {
-        return this.products.find({
-            where: {
-                active: true,
-                ...(search ? { name: ILike(`%${search}%`) } : {}),
-                ...(category ? { category: { slug: category } } : {}),
-            },
-            order: { createdAt: 'DESC' },
-        });
-    }
-    getProduct(slug) {
-        return this.products.findOneByOrFail({ slug, active: true }).catch(() => {
-            throw new NotFoundException('Product not found');
-        });
-    }
-    listCategories() {
-        return this.categories.find({
-            where: { active: true },
-            order: { name: 'ASC' },
-        });
-    }
-    createCategory(dto) {
-        return this.categories.save(this.categories.create(dto));
-    }
-    async updateCategory(id, dto) {
-        await this.categories.update(id, dto);
-        return this.categories.findOneByOrFail({ id });
-    }
-    async deleteCategory(id) {
-        await this.categories.softDelete(id);
-    }
-    async createProduct(dto) {
-        const category = await this.categories.findOneByOrFail({
-            id: dto.categoryId,
-        });
-        return this.products.save(this.products.create(Object.assign({}, dto, { category })));
-    }
-    async updateProduct(id, dto) {
-        const { categoryId, ...data } = dto;
-        const category = categoryId
-            ? await this.categories.findOneByOrFail({ id: categoryId })
-            : undefined;
-        await this.products.update(id, Object.assign({}, data, category ? { category } : {}));
-        return this.products.findOneByOrFail({ id });
-    }
-    async deleteProduct(id) {
-        await this.products.softDelete(id);
-    }
+    listProducts(search, category) { return this.products.find({ where: { active: true, ...(search ? { name: ILike(`%${search}%`) } : {}), ...(category ? { category: { slug: category } } : {}) }, order: { createdAt: 'DESC' } }); }
+    getProduct(slug) { return this.products.findOneByOrFail({ slug, active: true }).catch(() => { throw new NotFoundException('Product not found'); }); }
+    listCategories() { return this.categories.find({ where: { active: true }, order: { name: 'ASC' } }); }
+    listAdminCategories() { return this.categories.find({ order: { createdAt: 'ASC' } }); }
+    createCategory(dto) { return this.categories.save(this.categories.create(dto)); }
+    async updateCategory(id, dto) { await this.categories.update(id, dto); return this.categories.findOneByOrFail({ id }); }
+    async deleteCategory(id) { await this.categories.softDelete(id); }
+    async createProduct(dto) { const category = await this.categories.findOneByOrFail({ id: dto.categoryId }); return this.products.save(this.products.create(Object.assign({}, dto, { category }))); }
+    async updateProduct(id, dto) { const { categoryId, ...data } = dto; const category = categoryId ? await this.categories.findOneByOrFail({ id: categoryId }) : undefined; await this.products.update(id, Object.assign({}, data, category ? { category } : {})); return this.products.findOneByOrFail({ id }); }
+    async deleteProduct(id) { await this.products.softDelete(id); }
 };
 CatalogService = __decorate([
     Injectable(),
     __param(0, InjectRepository(Product)),
     __param(1, InjectRepository(Category)),
-    __metadata("design:paramtypes", [Repository,
-        Repository])
+    __metadata("design:paramtypes", [Repository, Repository])
 ], CatalogService);
 export { CatalogService };
 //# sourceMappingURL=catalog.service.js.map

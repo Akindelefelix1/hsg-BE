@@ -1,23 +1,14 @@
 import { AuthService } from './auth.service.js';
-import { LoginDto, RefreshDto, RegisterDto } from './auth.dto.js';
+import type { AuthenticatedUser } from './auth.service.js';
 export declare class AuthController {
     private readonly auth;
     constructor(auth: AuthService);
-    register(dto: RegisterDto): Promise<{
-        accessToken: string;
-        refreshToken: string;
+    me(req: {
+        user: AuthenticatedUser;
+    }): Promise<{
+        role: import("../../common/roles.js").Role;
+        id: string;
+        email: string;
+        name?: string;
     }>;
-    login(dto: LoginDto): Promise<{
-        accessToken: string;
-        refreshToken: string;
-    }>;
-    refresh(dto: RefreshDto): Promise<{
-        accessToken: string;
-        refreshToken: string;
-    }>;
-    logout(req: {
-        user: {
-            id: string;
-        };
-    }): Promise<void>;
 }

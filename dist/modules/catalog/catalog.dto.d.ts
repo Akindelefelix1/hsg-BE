@@ -2,6 +2,7 @@ export declare class CreateCategoryDto {
     name: string;
     slug: string;
     description?: string;
+    section?: 'fabric' | 'accessories';
     active?: boolean;
 }
 declare const UpdateCategoryDto_base: import("@nestjs/common").Type<Partial<CreateCategoryDto>>;

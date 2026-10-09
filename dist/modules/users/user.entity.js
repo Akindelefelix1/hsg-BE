@@ -7,7 +7,7 @@ var __decorate = (this && this.__decorate) || function (decorators, target, key,
 var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
-import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn, } from 'typeorm';
+import { Column, CreateDateColumn, Entity, PrimaryGeneratedColumn, UpdateDateColumn } from 'typeorm';
 import { Role } from '../../common/auth.js';
 let User = class User {
     id;
@@ -41,7 +41,7 @@ __decorate([
     __metadata("design:type", String)
 ], User.prototype, "role", void 0);
 __decorate([
-    Column({ nullable: true, select: false }),
+    Column({ type: 'varchar', nullable: true, select: false }),
     __metadata("design:type", Object)
 ], User.prototype, "refreshTokenHash", void 0);
 __decorate([

@@ -10,9 +10,9 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 var __param = (this && this.__param) || function (paramIndex, decorator) {
     return function (target, key) { decorator(target, key, paramIndex); }
 };
-import { Body, Controller, Get, Param, Patch, Post, UseGuards, } from '@nestjs/common';
+import { Body, Controller, Get, Param, Patch, Post, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard, Public, Role, Roles, RolesGuard, } from '../../common/auth.js';
+import { JwtAuthGuard, Public, Role, Roles, RolesGuard } from '../../common/auth.js';
 import { CreateOrderDto, UpdateOrderStatusDto } from './orders.dto.js';
 import { OrdersService } from './orders.service.js';
 let OrdersController = class OrdersController {
@@ -20,15 +20,9 @@ let OrdersController = class OrdersController {
     constructor(orders) {
         this.orders = orders;
     }
-    create(dto) {
-        return this.orders.create(dto);
-    }
-    list() {
-        return this.orders.list();
-    }
-    status(id, dto) {
-        return this.orders.status(id, dto.status);
-    }
+    create(dto) { return this.orders.create(dto); }
+    list() { return this.orders.list(); }
+    status(id, dto) { return this.orders.status(id, dto.status); }
 };
 __decorate([
     Public(),

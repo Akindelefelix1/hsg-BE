@@ -1,22 +1,16 @@
-import { JwtService } from '@nestjs/jwt';
-import { UsersService } from '../users/users.service.js';
-import { LoginDto, RegisterDto } from './auth.dto.js';
+import { ConfigService } from '@nestjs/config';
+import { DataSource } from 'typeorm';
+import { Role } from '../../common/roles.js';
+export interface AuthenticatedUser {
+    id: string;
+    email: string;
+    name?: string;
+}
 export declare class AuthService {
-    private readonly users;
-    private readonly jwt;
-    constructor(users: UsersService, jwt: JwtService);
-    register(dto: RegisterDto): Promise<{
-        accessToken: string;
-        refreshToken: string;
-    }>;
-    login(dto: LoginDto): Promise<{
-        accessToken: string;
-        refreshToken: string;
-    }>;
-    refresh(token: string): Promise<{
-        accessToken: string;
-        refreshToken: string;
-    }>;
-    logout(userId: string): Promise<void>;
-    private issue;
+    private readonly dataSource;
+    private readonly issuer;
+    private readonly jwks;
+    constructor(config: ConfigService, dataSource: DataSource);
+    verifyAccessToken(token: string): Promise<AuthenticatedUser>;
+    getRole(userId: string): Promise<Role | null>;
 }
